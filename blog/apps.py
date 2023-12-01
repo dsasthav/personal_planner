@@ -1,6 +1,13 @@
-from django.apps import AppConfig
+from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import User
 
 
-class BlogConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "blog"
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
