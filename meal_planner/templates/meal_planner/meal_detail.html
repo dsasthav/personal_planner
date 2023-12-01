@@ -2,20 +2,61 @@
 {% block content %}
   <article class="media content-section">
     <img class="rounded-circle article-img" src="{{ object.user.profile.image.url }}">
-    <div class="media-body">
-      <div class="article-metadata">
-        <a class="mr-2" href="{% url 'user-meals' object.user.username %}">{{ object.author }}</a>
-        <small class="text-muted">{{ object.date_created|date:"F d, Y" }}</small>
-        {% if object.author == user %}
-          <div>
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'meal-update' object.id %}">Update</a>
-            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'meal-delete' object.id %}">Delete</a>
-          </div>
-        {% endif %}
+    <div class="container mt-4">
+      <h1>{{ meal.name }}</h1>
+      <p>Calories: {{ meal.calories }}</p>
+      <p>Protein: {{ meal.protein }}</p>
+      <p>Servings: {{ meal.servings }}</p>
+      <div class="form-group">
+        <label for="ingredients">Ingredients:</label>
+        <textarea class="form-control" id="ingredients" rows="4" readonly>{{ meal.ingredients }}</textarea>
       </div>
-      <h2 class="article-title">{{ object.name }}</h2>
-      <p class="article-content">{{ object.calories }}</p>
-      <p class="article-content">{{ object.protein }}</p>
+      <div class="form-group">
+        <label for="recipe">Recipe:</label>
+        <textarea class="form-control" id="recipe" rows="6" readonly>{{ meal.recipe }}</textarea>
+      </div>
+      <p>Date Created: {{ meal.date_created }}</p>
+      <p>Meal Type:</p>
+      <ul>
+        <li>
+          {% if meal.is_breakfast %}
+            <span class="text-success"><i class="bi bi-check"></i> Breakfast</span>
+            <span class="checkmark">&#10004</span></li>
+          {% else %}
+            <span class="text-danger"><i class="bi bi-x"></i> Breakfast</span>
+            <span class="x">&#10006</span></li>
+          {% endif %}
+        </li>
+        <li>
+          {% if meal.is_lunch %}
+            <span class="text-success"><i class="bi bi-check"></i> Lunch</span>
+          {% else %}
+            <span class="text-danger"><i class="bi bi-x"></i> Lunch</span>
+          {% endif %}
+        </li>
+        <li>
+          {% if meal.is_dinner %}
+            <span class="text-success"><i class="bi bi-check"></i> Dinner</span>
+            <span class="checkmark">&#10004</span></li>
+          {% else %}
+            <span class="text-danger"><i class="bi bi-x"></i> Dinner</span>
+            <span class="x">&#10006</span></li>
+          {% endif %}
+        </li>
+        <li>
+          {% if meal.is_snack %}
+            <span class="text-success"><i class="bi bi-check"></i> Snack</span>
+          {% else %}
+            <span class="text-danger"><i class="bi bi-x"></i> Snack</span>
+          {% endif %}
+        </li>
+      </ul>
+      <p>Created by: {{ meal.user.username }}</p>
+
+      {% if object.user == user %}
+        <a class="btn btn-primary" href="{% url 'meal-update' object.id %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'meal-delete' object.id %}">Delete</a>
+      {% endif %}
     </div>
   </article>
 {% endblock content %}
