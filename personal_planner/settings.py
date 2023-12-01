@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'blog.apps.BlogConfig',
+    'meal_planner.apps.MealPlannerConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
     'crispy_bootstrap4',
