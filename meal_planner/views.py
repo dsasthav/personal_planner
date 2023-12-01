@@ -9,18 +9,19 @@ from django.views.generic import (
     DeleteView
 )
 from .models import Meal
+PAGINATE_NUM = 10
 
 
 class MealListView(ListView):
     model = Meal
     ordering = ['-date_created']
-    paginate_by = 5
+    paginate_by = PAGINATE_NUM
 
 
 class UserMealListView(ListView):
     model = Meal
     template_name = 'meal/user_meals.html'  # <app>/<model>_<viewtype>.html
-    paginate_by = 5
+    paginate_by = PAGINATE_NUM
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))

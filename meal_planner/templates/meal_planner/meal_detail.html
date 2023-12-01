@@ -30,8 +30,10 @@
         <li>
           {% if meal.is_lunch %}
             <span class="text-success"><i class="bi bi-check"></i> Lunch</span>
+            <span class="checkmark">&#10004</span></li>
           {% else %}
             <span class="text-danger"><i class="bi bi-x"></i> Lunch</span>
+            <span class="x">&#10006</span></li>
           {% endif %}
         </li>
         <li>
@@ -46,8 +48,10 @@
         <li>
           {% if meal.is_snack %}
             <span class="text-success"><i class="bi bi-check"></i> Snack</span>
+            <span class="checkmark">&#10004</span></li>
           {% else %}
             <span class="text-danger"><i class="bi bi-x"></i> Snack</span>
+            <span class="x">&#10006</span></li>
           {% endif %}
         </li>
       </ul>
