@@ -1,16 +1,19 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1 class="mb-3">Posts by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
-    {% for post in object_list %}
+    {% for object in object_list %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ object.user.profile.image.url }}">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="{% url 'user-posts' object.user.username %}">{{ object.user }}</a>
+              <a class="mr-2" href="{% url 'user-meals' object.user.username %}">{{ object.user }}</a>
               <small class="text-muted">{{ object.date_created|date:"F d, Y" }}</small>
             </div>
-            <h2><a class="article-title" href="{% url 'post-detail' object.id %}">{{ object.name }}</a></h2>
-            <p class="article-content">{{ object.calories }}</p>
+            <h2><a class="article-title" href="{% url 'meal-detail' object.id %}">{{ object.name }}</a></h2>
+            <div class="article-metadata">
+              <span class="text-secondary">Calories: {{ object.calories }}</span>
+              <span class="text-secondary">Protein: {{ object.protein }}g</span>
+            </div>
+            
           </div>
         </article>
     {% endfor %}

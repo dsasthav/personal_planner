@@ -9,7 +9,25 @@
               <small class="text-muted">{{ object.date_created|date:"F d, Y" }}</small>
             </div>
             <h2><a class="article-title" href="{% url 'meal-detail' object.id %}">{{ object.name }}</a></h2>
-            <p class="article-metadata">{{ object.content }}</p>
+            <div class="article-metadata">
+              <span class="text-secondary">Calories: {{ object.calories }}</span>
+              <span class="text-secondary">Protein: {{ object.protein }}g</span>
+            </div>
+            <div>
+              {% if object.is_breakfast %}
+                <span class="badge badge-secondary">Breakfast</span>
+              {% endif %}
+              {% if object.is_lunch %}
+                <span class="badge badge-secondary">Lunch</span>
+              {% endif %}
+              {% if object.is_dinner %}
+                <span class="badge badge-secondary">Dinner</span>
+              {% endif %}
+              {% if object.is_snack %}
+                <span class="badge badge-secondary">Snack</span>
+              {% endif %}
+            </div>
+            
           </div>
         </article>
     {% endfor %}

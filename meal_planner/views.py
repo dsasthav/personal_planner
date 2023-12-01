@@ -8,6 +8,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+from .forms import MealForm
 from .models import Meal
 PAGINATE_NUM = 10
 
@@ -34,7 +35,7 @@ class MealDetailView(DetailView):
 
 class MealCreateView(LoginRequiredMixin, CreateView):
     model = Meal
-    fields = '__all__'
+    form_class = MealForm
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -43,6 +44,7 @@ class MealCreateView(LoginRequiredMixin, CreateView):
 
 class MealUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Meal
+    form_class = MealForm
 
     def form_valid(self, form):
         form.instance.user = self.request.user
