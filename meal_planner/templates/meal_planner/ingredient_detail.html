@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  <article class="media content-section">
+    <div class="container mt-4">
+      <h1>{{ ingredient.name }}</h1>
+      <p>Date Created: {{ ingredient.date_created }}</p>  
+      {% if user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'ingredient-update' object.id %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'ingredient-delete' object.id %}">Delete</a>
+      {% endif %}
+    </div>
+  </article>
+{% endblock content %}

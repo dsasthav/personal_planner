@@ -1,0 +1,46 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form id="form-container" method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">New Recipe</legend>
+                {{ form|crispy }}
+                {{ ingredient_formset.management_form }}
+                {% for ing_form in ingredient_formset.forms %}
+                    <div class="recipe-ingredient-form">
+                        {{ ing_form|crispy }}
+                    </div>
+                {% endfor %}
+            </fieldset>
+            <button id="add-form" class="btn btn-outline-secondary" type="button">Add Ingredient</button>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let ingForm = document.querySelectorAll(".recipe-ingredient-form")
+        let container = document.querySelector("#form-container")
+        let addButton = document.querySelector("#add-form")
+        let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+        let formNum = ingForm.length-1
+        addButton.addEventListener('click', addForm)
+
+        function addForm(e){
+            e.preventDefault()
+
+            let newForm = ingForm[0].cloneNode(true)
+            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+            formNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+            container.insertBefore(newForm, addButton)
+            
+            totalForms.setAttribute('value', `${formNum+1}`)
+        }
+    </script>
+{% endblock content %}

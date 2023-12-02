@@ -1,0 +1,16 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  <article class="media content-section">
+    <div class="container mt-4">
+      <h1>{{ object.name }}</h1>
+      <p>Date Created: {{ object.date_created }}</p>  
+      {% for ingredient in recipe.ingredients.all %}
+        <p>{{ ingredient.name }}</p>
+      {% endfor %}
+      {% if user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'recipe-update' object.id %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'recipe-delete' object.id %}">Delete</a>
+      {% endif %}
+    </div>
+  </article>
+{% endblock content %}
