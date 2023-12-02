@@ -28,9 +28,10 @@
                     <td>
                         <div>
                             <a href="{% url 'meal-detail' day.breakfast.id %}">{{ day.breakfast.name }}</a>
-                            <p class="my-0 text-muted">{{ day.breakfast.calories }} calories</p>
-                            <p class="my-0 text-muted">{{ day.breakfast.protein }}g protein</p>
-                            <p class="my-0 text-muted">{{ day.breakfast.servings }} servings</p>
+                            <p class="my-0 text-muted">{{ day.breakfast.calories }} cal per serving</p>
+                            <p class="my-0 text-muted">{{ day.breakfast.protein }}g protein per serving</p>
+                            <p class="my-0 text-muted">Servings to Eat: {{ day.breakfast_servings }}</p>
+                            <p class="my-0 text-muted">Recipe Servings: {{ day.breakfast.servings }}</p>
                         </div>
                     </td>
                     <td>
@@ -51,10 +52,12 @@
                     </td>
                     <td>
                         <div>
+                            {% if day.snack %}
                             <a href="{% url 'meal-detail' day.snack.id %}">{{ day.snack.name }}</a>
                             <p class="my-0 text-muted">{{ day.snack.calories }} calories</p>
                             <p class="my-0 text-muted">{{ day.snack.protein }}g protein</p>
                             <p class="my-0 text-muted">{{ day.snack.servings }} servings</p>
+                            {% endif %}
                         </div>
                     </td>
                     <td>
