@@ -5,12 +5,14 @@ from .views import (
     MealCreateView,
     MealUpdateView,
     MealDeleteView,
-    UserMealListView
+    UserMealListView,
+    run_meal_planner,
 )
 from . import views
 
 urlpatterns = [
-    path('', MealListView.as_view(), name='meal-list'),
+    path('', run_meal_planner, name='meal-planner'),
+    path('meal', MealListView.as_view(), name='meal-list'),
     path('user/<str:username>', UserMealListView.as_view(), name='user-meals'),
     path('meal/<int:pk>/', MealDetailView.as_view(), name='meal-detail'),
     path('meal/new/', MealCreateView.as_view(), name='meal-create'),

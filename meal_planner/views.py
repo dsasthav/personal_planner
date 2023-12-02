@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import (
@@ -8,10 +9,12 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-from .forms import MealForm
+from django.contrib import messages
+from .forms import MealForm, MealPlannerForm
 from .models import Meal
-PAGINATE_NUM = 10
+from .utils import MealPlanner
 
+PAGINATE_NUM = 10
 
 class MealListView(ListView):
     model = Meal
@@ -66,3 +69,22 @@ class MealDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.user:
             return True
         return False
+    
+@login_required
+def run_meal_planner(request):
+    context = {}
+    if request.method == 'POST':
+        form = MealPlannerForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            days_to_plan = form.cleaned_data.get('days_to_plan')
+            daily_calorie_limit = form.cleaned_data.get('daily_calorie_limit')
+            meal_planner = MealPlanner(user, days_to_plan, daily_calorie_limit)
+            meal_plan = meal_planner.execute()
+            context.update({'meal_plan': meal_plan})
+            messages.success(request, f"{user.username}'s meal plan has been created for {days_to_plan} days of {daily_calorie_limit} calories!")
+    else:
+        form = MealPlannerForm()
+        
+    context.update({'form': form})
+    return render(request, 'meal_planner/meal_planner.html', context)
