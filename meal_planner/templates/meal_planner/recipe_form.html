@@ -33,14 +33,13 @@
         function addForm(e){
             e.preventDefault()
 
-            let newForm = ingForm[0].cloneNode(true)
+            let newForm = ingForm[-1].cloneNode(true)
             let formRegex = RegExp(`form-(\\d){1}-`,'g')
 
             formNum++
             newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
             container.insertBefore(newForm, addButton)
             
-            totalForms.setAttribute('value', `${formNum+1}`)
         }
     </script>
 {% endblock content %}

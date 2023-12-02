@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+
 class Meal(models.Model):
     name = models.CharField(max_length=100)
     calories = models.IntegerField()
@@ -19,10 +20,11 @@ class Meal(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
-        return reverse('meal-detail', kwargs={'pk': self.pk})
-    
+        return reverse("meal-detail", kwargs={"pk": self.pk})
+
+
 class Recipe(models.Model):
     name = models.CharField(max_length=100)
     calories = models.IntegerField()
@@ -38,14 +40,14 @@ class Recipe(models.Model):
     cook_time = models.IntegerField(blank=True, null=True)
     ready_time = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ingredients = models.ManyToManyField('Ingredient', through='RecipeIngredient')
+    ingredients = models.ManyToManyField("Ingredient", through="RecipeIngredient")
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
-        return reverse('recipe-detail', kwargs={'pk': self.pk})
-    
+        return reverse("recipe-detail", kwargs={"pk": self.pk})
+
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
@@ -53,10 +55,11 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
-        return reverse('ingredient-detail', kwargs={'pk': self.pk})
-    
+        return reverse("ingredient-detail", kwargs={"pk": self.pk})
+
+
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
@@ -65,7 +68,7 @@ class RecipeIngredient(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f'{self.recipe.name} - {self.ingredient.name}'
-    
+        return f"{self.recipe.name} - {self.ingredient.name}"
+
     def get_absolute_url(self):
-        return reverse('recipeingredient-detail', kwargs={'pk': self.pk})
+        return reverse("recipeingredient-detail", kwargs={"pk": self.pk})
