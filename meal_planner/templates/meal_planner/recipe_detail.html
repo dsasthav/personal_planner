@@ -6,7 +6,9 @@
         <p>Date Created: {{ object.date_created }}</p>
         <p>{{ object.calories }} Calories</p>
         <p>{{ object.protein}}g Protein</p>
-        <p>{{ object.servings}} servings</p>
+        <p>{{ object.servings|floatformat:"3"}} servings</p>
+        <p class="h4">Instructions:</p>
+        <p>{{ object.directions }}</p>
         <p class="h4">Ingredients:</p>
         <table class="table">
             <th>
