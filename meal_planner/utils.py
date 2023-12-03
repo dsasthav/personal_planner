@@ -39,13 +39,17 @@ class MealPlanner:
             "dinner": [],
         }
 
-    def get_random_meal(self, meal_type):
-        filter = {f"is_{meal_type}": True}
-        meal_options = self.user_recipes.filter(**filter)
+    def get_random_meal(self, meal_type, calories_remaining=None):
+        type_filter = {f"is_{meal_type}": True}
+        meal_options = self.user_recipes.filter(**type_filter)
+        if calories_remaining:
+            meal_options = meal_options.filter(calories__lte=calories_remaining)
+            if not meal_options:
+                return None
         meal = random.choices(
             meal_options, weights=[meal.protein for meal in meal_options], k=1
-        )[0]
-        return meal
+        )
+        return meal[0]
 
     def execute(self):
         """
@@ -106,8 +110,9 @@ class MealPlanner:
 
             # if total calories is less than daily limit, add snack
             if meal_plan.total_calories < self.daily_calorie_limit:
-                snack = self.get_random_meal("snack")
-                meal_plan.set_meal(snack, "snack")
+                snack = self.get_random_meal("snack", calories_remaining=self.daily_calorie_limit-meal_plan.total_calories)
+                if snack:
+                    meal_plan.set_meal(snack, "snack")
 
             # append MealPlan to list of meal plans
             meal_plans.append(meal_plan)
