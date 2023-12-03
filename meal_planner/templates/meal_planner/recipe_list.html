@@ -8,6 +8,10 @@
             </div>
             <h2><a class="article-title" href="{% url 'recipe-detail' object.id %}">{{ object.name }}</a></h2>
           </div>
+          <div class="article-metadata">
+            <small class="text-muted">{{ object.calories }} Calories</small>
+            <small class="text-muted">{{ object.protein }}g Protein</small>
+          </div>
         </article>
     {% endfor %}
     {% if is_paginated %}

@@ -1,0 +1,278 @@
+[
+    {
+        "model": "meal_planner.recipe",
+        "pk": 1,
+        "fields": {
+            "name": "Chicken and Broccoli",
+            "calories": 500,
+            "protein": 50,
+            "servings": 2,
+            "directions": "Make chicken and broccoli",
+            "date_created": "2023-12-02T19:20:21Z",
+            "is_breakfast": false,
+            "is_lunch": true,
+            "is_dinner": true,
+            "is_snack": false,
+            "prep_time": null,
+            "cook_time": null,
+            "ready_time": null,
+            "user": 1,
+            "ingredient_text": ""
+        }
+    },
+    {
+        "model": "meal_planner.recipe",
+        "pk": 2,
+        "fields": {
+            "name": "Chicken and Broccoli 2",
+            "calories": 500,
+            "protein": 50,
+            "servings": 2,
+            "directions": "",
+            "date_created": "2023-01-01T00:00:00Z",
+            "is_breakfast": false,
+            "is_lunch": true,
+            "is_dinner": true,
+            "is_snack": false,
+            "prep_time": null,
+            "cook_time": null,
+            "ready_time": null,
+            "user": 1,
+            "ingredient_text": ""
+        }
+    },
+    {
+        "model": "meal_planner.recipe",
+        "pk": 6,
+        "fields": {
+            "name": "chicken and b",
+            "calories": 500,
+            "protein": 50,
+            "servings": 1,
+            "directions": "",
+            "date_created": "2023-12-02T21:05:26.904Z",
+            "is_breakfast": false,
+            "is_lunch": true,
+            "is_dinner": true,
+            "is_snack": false,
+            "prep_time": null,
+            "cook_time": null,
+            "ready_time": null,
+            "user": 1,
+            "ingredient_text": ""
+        }
+    },
+    {
+        "model": "meal_planner.recipe",
+        "pk": 10,
+        "fields": {
+            "name": "cb",
+            "calories": 500,
+            "protein": 50,
+            "servings": 2,
+            "directions": "",
+            "date_created": "2023-12-02T21:36:12.816Z",
+            "is_breakfast": false,
+            "is_lunch": false,
+            "is_dinner": true,
+            "is_snack": true,
+            "prep_time": null,
+            "cook_time": null,
+            "ready_time": null,
+            "user": 1,
+            "ingredient_text": ""
+        }
+    },
+    {
+        "model": "meal_planner.recipe",
+        "pk": 12,
+        "fields": {
+            "name": "cb21",
+            "calories": 500,
+            "protein": 20,
+            "servings": 222,
+            "directions": "",
+            "date_created": "2023-12-02T23:00:26.617Z",
+            "is_breakfast": false,
+            "is_lunch": false,
+            "is_dinner": true,
+            "is_snack": false,
+            "prep_time": null,
+            "cook_time": null,
+            "ready_time": null,
+            "user": 1,
+            "ingredient_text": ""
+        }
+    },
+    {
+        "model": "meal_planner.recipe",
+        "pk": 13,
+        "fields": {
+            "name": "steak and broccoli",
+            "calories": 300,
+            "protein": 30,
+            "servings": 3,
+            "directions": "",
+            "date_created": "2023-12-02T23:02:13.679Z",
+            "is_breakfast": true,
+            "is_lunch": false,
+            "is_dinner": false,
+            "is_snack": true,
+            "prep_time": null,
+            "cook_time": null,
+            "ready_time": null,
+            "user": 1,
+            "ingredient_text": ""
+        }
+    },
+    {
+        "model": "meal_planner.ingredient",
+        "pk": 4,
+        "fields": {
+            "name": "Chicken Breast",
+            "date_created": "2023-12-02T19:04:40Z"
+        }
+    },
+    {
+        "model": "meal_planner.ingredient",
+        "pk": 5,
+        "fields": {
+            "name": "Broccoli",
+            "date_created": "2023-12-02T19:04:47Z"
+        }
+    },
+    {
+        "model": "meal_planner.ingredient",
+        "pk": 6,
+        "fields": {
+            "name": "Brussel Sprouts",
+            "date_created": "2023-12-02T19:04:50Z"
+        }
+    },
+    {
+        "model": "meal_planner.ingredient",
+        "pk": 7,
+        "fields": {
+            "name": "Salmon",
+            "date_created": "2023-12-02T19:20:16.422Z"
+        }
+    },
+    {
+        "model": "meal_planner.ingredient",
+        "pk": 8,
+        "fields": {
+            "name": "steak",
+            "date_created": "2023-12-02T23:01:08.178Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 1,
+        "fields": {
+            "recipe": 6,
+            "ingredient": 4,
+            "quantity": "2.00000",
+            "unit": "1",
+            "date_created": "2023-12-02T21:05:26.915Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 9,
+        "fields": {
+            "recipe": 10,
+            "ingredient": 4,
+            "quantity": "2.00000",
+            "unit": "ea",
+            "date_created": "2023-12-02T21:36:12.819Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 13,
+        "fields": {
+            "recipe": 6,
+            "ingredient": 7,
+            "quantity": "2.00000",
+            "unit": "ea",
+            "date_created": "2023-12-02T21:05:26.915Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 16,
+        "fields": {
+            "recipe": 10,
+            "ingredient": 5,
+            "quantity": "2.00000",
+            "unit": "ea",
+            "date_created": "2023-12-02T21:36:12.820Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 18,
+        "fields": {
+            "recipe": 10,
+            "ingredient": 7,
+            "quantity": "3.00000",
+            "unit": "2",
+            "date_created": "2023-12-02T22:46:00.772Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 19,
+        "fields": {
+            "recipe": 10,
+            "ingredient": 7,
+            "quantity": "3.00000",
+            "unit": "1",
+            "date_created": "2023-12-02T22:46:58.337Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 20,
+        "fields": {
+            "recipe": 10,
+            "ingredient": 7,
+            "quantity": "7.00000",
+            "unit": "eac",
+            "date_created": "2023-12-02T22:53:22.492Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 21,
+        "fields": {
+            "recipe": 10,
+            "ingredient": 6,
+            "quantity": "12.00000",
+            "unit": "eacg",
+            "date_created": "2023-12-02T22:57:24.272Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 24,
+        "fields": {
+            "recipe": 13,
+            "ingredient": 8,
+            "quantity": "1.00000",
+            "unit": "ea",
+            "date_created": "2023-12-03T00:36:44.571Z"
+        }
+    },
+    {
+        "model": "meal_planner.recipeingredient",
+        "pk": 25,
+        "fields": {
+            "recipe": 13,
+            "ingredient": 5,
+            "quantity": "2.00000",
+            "unit": "ea",
+            "date_created": "2023-12-03T00:36:52.472Z"
+        }
+    }
+]

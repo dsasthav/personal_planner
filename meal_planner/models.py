@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 class Recipe(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     calories = models.IntegerField()
     protein = models.IntegerField()
-    servings = models.IntegerField()
+    servings = models.DecimalField(decimal_places=5, max_digits=10, blank=True, null=True)
     directions = models.TextField(blank=True)
     date_created = models.DateTimeField(default=timezone.now)
     is_breakfast = models.BooleanField(default=False)
@@ -19,6 +19,7 @@ class Recipe(models.Model):
     ready_time = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ingredients = models.ManyToManyField("Ingredient", through="RecipeIngredient")
+    ingredient_text = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
@@ -28,7 +29,7 @@ class Recipe(models.Model):
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     date_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -41,7 +42,7 @@ class Ingredient(models.Model):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.DecimalField(decimal_places=5, max_digits=10, blank=True, null=True)
     unit = models.CharField(max_length=100)
     date_created = models.DateTimeField(default=timezone.now)
 

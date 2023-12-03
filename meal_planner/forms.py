@@ -6,10 +6,12 @@ from betterforms.multiform import MultiModelForm
 from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
 from crispy_forms.helper import FormHelper
 
+DEFAULT_DAYS_TO_PLAN = 5
+DEFAULT_DAILY_CALORIE_LIMIT = 2000
 
 class MealPlannerForm(forms.Form):
-    days_to_plan = forms.IntegerField()
-    daily_calorie_limit = forms.IntegerField()
+    days_to_plan = forms.IntegerField(initial=DEFAULT_DAYS_TO_PLAN)
+    daily_calorie_limit = forms.IntegerField(initial=DEFAULT_DAILY_CALORIE_LIMIT)
 
 
 class RecipeForm(forms.ModelForm):
