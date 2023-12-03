@@ -1,55 +1,27 @@
-from .models import Meal
+from .models import Recipe
 from django.contrib.auth.models import User
 import random
 
 
-class DayMeals:
-    def __init__(self):
-        self.breakfast = None
-        self.breakfast_servings = 0
-        self.lunch = None
-        self.lunch_servings = 0
-        self.dinner = None
-        self.dinner_servings = 0
-        self.snack = None
-        self.snack_servings = 0
+class MealPlan:
+    """
+    Meal plan for one day
+    """
+    def __init__(self, breakfast=None, lunch=None, dinner=None, snack=None):
+        self.breakfast = breakfast
+        self.lunch = lunch
+        self.dinner = dinner
+        self.snack = snack
         self.total_calories = 0
         self.total_protein = 0
 
-    # setter for breakfast
-    def set_breakfast(self, meal, qty=1):
-        self.breakfast = meal
-        self.breakfast_servings = qty
-        self.total_calories += meal.calories * qty
-        self.total_protein += meal.protein * qty
-
-    # setter for lunch
-    def set_lunch(self, meal, qty=1):
-        self.lunch = meal
-        self.lunch_servings = qty
-        self.total_calories += meal.calories * qty
-        self.total_protein += meal.protein * qty
-
-    # setter for dinner
-    def set_dinner(self, meal, qty=1):
-        self.dinner = meal
-        self.dinner_servings = qty
-        self.total_calories += meal.calories * qty
-        self.total_protein += meal.protein * qty
-
-    # setter for snack
-    def set_snack(self, meal, qty=1):
-        self.snack = meal
-        self.snack_servings = qty
-        self.total_calories += meal.calories * qty
-        self.total_protein += meal.protein * qty
-
-    # method to check if breakfast, lunch, and dinner are set
-    def is_complete(self):
-        return self.breakfast and self.lunch and self.dinner
-
+    def set_meal(self, recipe, meal_type):
+        setattr(self, meal_type, recipe)
+        self.total_calories += recipe.calories 
+        self.total_protein += recipe.protein
 
 class MealPlanner:
+
     def __init__(
         self,
         user: User,
@@ -60,77 +32,86 @@ class MealPlanner:
         self.user = user
         self.days_to_plan = days_to_plan
         self.daily_calorie_limit = daily_calorie_limit
-        self.user_meals = Meal.objects.filter(user=user)
-        self.meal_calorie_minimum = meal_calorie_minimum
-        self.week_meals = [DayMeals() for _ in range(days_to_plan)]
+        self.user_recipes = Recipe.objects.filter(user=user)
+        self.queue = {
+            "breakfast": [],
+            "lunch": [],
+            "dinner": [],
+        }
 
-    # Plan multiple days of meals based on calorie limit
+    def get_random_meal(self, meal_type):
+        filter = {f"is_{meal_type}": True}
+        meal_options = self.user_recipes.filter(**filter)
+        meal = random.choices(
+            meal_options, weights=[meal.protein for meal in meal_options], k=1
+        )[0]
+        return meal
+
     def execute(self):
-        # for each day to plan
-        for day_num, day in enumerate(self.week_meals):
-            # pick a breakfast
-            if not day.breakfast:
-                breakfast_options = self.user_meals.filter(is_breakfast=True)
-                breakfast = random.choices(
-                    breakfast_options,
-                    weights=[meal.protein for meal in breakfast_options],
-                    k=1,
-                )[0]
-                breakfast_servings_to_eat = self.choose_daily_servings(breakfast)
-                day.set_breakfast(breakfast, breakfast_servings_to_eat)
+        """
+        Algorithm:
+            Every day needs a breakfast, lunch, and dinner
+            For each meal, pick a random recipe from the user's recipes
+            If the recipe has more than 1 serving, queue the recipe for the next day
+            If the total calories for the day is less than the daily calorie limit, add a snack
+        """
+        
+        meal_plans = []
+        for _ in range(self.days_to_plan):
+            meal_plan = MealPlan()
+            
+            # randomly pick a breakfast
+            if self.queue.get("breakfast"):
+                breakfast, breakfast_servings = self.queue.pop("breakfast")
+            else:
+                breakfast = self.get_random_meal("breakfast")
+                breakfast_servings = breakfast.servings
+            
+            # set breakfast for the current day
+            meal_plan.set_meal(breakfast, "breakfast")
 
-            # pick a lunch
-            if not day.lunch:
-                lunch_options = self.user_meals.filter(is_lunch=True)
-                lunch = random.choices(
-                    lunch_options, weights=[meal.protein for meal in lunch_options], k=1
-                )[0]
-                lunch_servings_to_eat = self.choose_daily_servings(lunch)
-                day.set_lunch(lunch, lunch_servings_to_eat)
+            # if breakfast recipe has more than 1 serving, queue the meal for the next day
+            if breakfast_servings > 1:
+                self.queue["breakfast"].append((breakfast, breakfast_servings-1))
 
-                # if lunch recipe makes more than 1 day of servings, add to next day
-                if (
-                    lunch_servings_to_eat < lunch.servings
-                    and self.week_meals.index(day) < len(self.week_meals) - 1
-                ):
-                    self.week_meals[self.week_meals.index(day) + 1].set_lunch(
-                        lunch, lunch_servings_to_eat
-                    )
+            # randomly pick a lunch
+            if self.queue.get("lunch"):
+                lunch, lunch_servings = self.queue.pop("lunch")
+            else:
+                lunch = self.get_random_meal("lunch")
+                lunch_servings = lunch.servings
 
-            # pick a dinner
-            if not day.dinner:
-                dinner_options = self.user_meals.filter(is_dinner=True)
-                dinner = random.choices(
-                    dinner_options,
-                    weights=[meal.protein for meal in dinner_options],
-                    k=1,
-                )[0]
-                dinner_servings = self.choose_daily_servings(dinner)
-                day.set_dinner(dinner, dinner_servings)
+            # set lunch for the current day
+            meal_plan.set_meal(lunch, "lunch")
 
-                # if dinner recipe makes more than 1 day of servings, add to next day
-                if (
-                    dinner_servings > 1
-                    and self.week_meals.index(day) < len(self.week_meals) - 1
-                ):
-                    self.week_meals[self.week_meals.index(day) + 1].set_dinner(
-                        dinner, dinner_servings
-                    )
+            # if lunch recipe has more than 1 serving, queue the meal for the next day
+            if lunch_servings > 1:
+                self.queue["lunch"].append((lunch, lunch_servings-1))   
 
-            # calculate total calories
-            if day.total_calories < self.daily_calorie_limit:
-                snack_options = self.user_meals.filter(is_snack=True)
-                snack = random.choice(snack_options)
-                day.set_snack(snack, 1)
+            # randomly pick a dinner
+            if self.queue.get("dinner"):
+                dinner, dinner_servings = self.queue.pop("dinner")
+            else:
+                dinner = self.get_random_meal("dinner")
+                dinner_servings = dinner.servings
 
-        return self.week_meals
+            # set dinner for the current day
+            meal_plan.set_meal(dinner, "dinner")
 
-    # choose the daily servings of the meal type to get at least 500 calories
-    def choose_daily_servings(self, meal):
-        calories_per_serving = meal.calories
-        meal_calories = meal.calories
-        servings_per_day = 1
-        while meal_calories < self.meal_calorie_minimum:
-            servings_per_day += 1
-            meal_calories = servings_per_day * calories_per_serving
-        return servings_per_day
+            # if dinner recipe has more than 1 serving, queue the meal for the next day
+            if dinner_servings > 1:
+                self.queue["dinner"].append((dinner, dinner_servings-1))
+
+            # calculate total calories for day
+
+            # if total calories is less than daily limit, add snack
+            if meal_plan.total_calories < self.daily_calorie_limit:
+                snack = self.get_random_meal("snack")
+                meal_plan.set_meal(snack, "snack")
+
+            # append MealPlan to list of meal plans
+            meal_plans.append(meal_plan)
+
+        return meal_plans
+
+    

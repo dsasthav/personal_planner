@@ -12,68 +12,13 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import MealForm, MealPlannerForm, RecipeForm, RecipeIngredientFormset
-from .models import Meal, Ingredient, Recipe, RecipeIngredient
+from .forms import MealPlannerForm, RecipeForm, RecipeIngredientFormset
+from .models import Ingredient, Recipe, RecipeIngredient
 from .utils import MealPlanner
 from django.db import transaction
 
 
 PAGINATE_NUM = 10
-
-
-class MealListView(ListView):
-    model = Meal
-    ordering = ["-date_created"]
-    paginate_by = PAGINATE_NUM
-
-
-class UserMealListView(ListView):
-    model = Meal
-    template_name = "meal/user_meals.html"  # <app>/<model>_<viewtype>.html
-    paginate_by = PAGINATE_NUM
-
-    def get_queryset(self):
-        user = get_object_or_404(User, username=self.kwargs.get("username"))
-        return Meal.objects.filter(user=user).order_by("-date_created")
-
-
-class MealDetailView(DetailView):
-    model = Meal
-
-
-class MealCreateView(LoginRequiredMixin, CreateView):
-    model = Meal
-    form_class = MealForm
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class MealUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Meal
-    form_class = MealForm
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.user:
-            return True
-        return False
-
-
-class MealDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Meal
-    success_url = "/meal"
-
-    def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.user:
-            return True
-        return False
 
 
 @login_required
@@ -86,18 +31,36 @@ def run_meal_planner(request):
             days_to_plan = form.cleaned_data.get("days_to_plan")
             daily_calorie_limit = form.cleaned_data.get("daily_calorie_limit")
             meal_planner = MealPlanner(user, days_to_plan, daily_calorie_limit)
-            meal_plan = meal_planner.execute()
-            context.update({"meal_plan": meal_plan})
-            messages.success(
-                request,
-                f"{user.username}'s meal plan has been created for {days_to_plan} days of {daily_calorie_limit} calories!",
-            )
+            if user_can_meal_plan(user):
+
+                meal_plan = meal_planner.execute()
+                context.update({"meal_plan": meal_plan})
+                messages.success(
+                    request,
+                    f"{user.username}'s meal plan has been created for {days_to_plan} days of {daily_calorie_limit} calories!",
+                )
+            else:
+                messages.error(
+                    request,
+                    f"{user.username} needs at least 1 breakfast, lunch, and dinner recipe to run the meal planner.",
+                )
     else:
         form = MealPlannerForm()
 
     context.update({"form": form})
     return render(request, "meal_planner/meal_planner.html", context)
 
+def user_can_meal_plan(user):
+    """
+    user can only run the meal plan if they have at least one recipe
+    for breakfast, lunch, and dinner
+    """
+    user_recipes = Recipe.objects.filter(user=user)
+    return (
+        user_recipes.filter(is_breakfast=True).exists()
+        and user_recipes.filter(is_lunch=True).exists()
+        and user_recipes.filter(is_dinner=True).exists()
+    )
 
 class IngredientListView(ListView):
     model = Ingredient
@@ -133,13 +96,13 @@ class RecipeListView(ListView):
 
 
 class UserRecipeListView(ListView):
-    model = Meal
+    model = Recipe
     template_name = "meal/user_recipes.html"  # <app>/<model>_<viewtype>.html
     paginate_by = PAGINATE_NUM
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get("username"))
-        return Meal.objects.filter(user=user).order_by("-date_created")
+        return Recipe.objects.filter(user=user).order_by("-date_created")
 
 
 class RecipeDetailView(DetailView):
