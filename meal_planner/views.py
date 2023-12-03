@@ -40,7 +40,7 @@ def run_meal_planner(request):
                     f"{user.username}'s meal plan has been created for {days_to_plan} days of {daily_calorie_limit} calories!",
                 )
             else:
-                messages.error(
+                messages.warning(
                     request,
                     f"{user.username} needs at least 1 breakfast, lunch, and dinner recipe to run the meal planner.",
                 )

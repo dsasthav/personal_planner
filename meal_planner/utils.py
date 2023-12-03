@@ -62,7 +62,7 @@ class MealPlanner:
             
             # randomly pick a breakfast
             if self.queue.get("breakfast"):
-                breakfast, breakfast_servings = self.queue.pop("breakfast")
+                breakfast, breakfast_servings = self.queue["breakfast"].pop(0)
             else:
                 breakfast = self.get_random_meal("breakfast")
                 breakfast_servings = breakfast.servings
@@ -76,7 +76,7 @@ class MealPlanner:
 
             # randomly pick a lunch
             if self.queue.get("lunch"):
-                lunch, lunch_servings = self.queue.pop("lunch")
+                lunch, lunch_servings = self.queue["lunch"].pop(0)
             else:
                 lunch = self.get_random_meal("lunch")
                 lunch_servings = lunch.servings
@@ -90,7 +90,7 @@ class MealPlanner:
 
             # randomly pick a dinner
             if self.queue.get("dinner"):
-                dinner, dinner_servings = self.queue.pop("dinner")
+                dinner, dinner_servings = self.queue["dinner"].pop(0)
             else:
                 dinner = self.get_random_meal("dinner")
                 dinner_servings = dinner.servings
