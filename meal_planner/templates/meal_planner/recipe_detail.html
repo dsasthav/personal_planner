@@ -8,11 +8,21 @@
         <p>{{ object.protein}}g Protein</p>
         <p>{{ object.servings}} servings</p>
         <p class="h4">Ingredients:</p>
-        <ul>
-            {% for ingredient in recipe.ingredients.all %}
-            <p>{{ ingredient.name }}</p>
+        <table class="table">
+            <th>
+                <td>Ingredient</td>
+                <td>Quantity</td>
+                <td>Unit</td>
+            </th>
+            {% for ingredient in recipe.recipeingredient_set.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ ingredient.ingredient.name }}</td>
+                <td>{{ ingredient.quantity|floatformat:"2" }}</td>
+                <td>{{ ingredient.unit }}</td>
+            </tr>
             {% endfor %}
-        </ul>
+        </table>
 
         {% if user.is_authenticated %}
         <a class="btn btn-primary" href="{% url 'recipe-update' object.id %}">Update</a>
