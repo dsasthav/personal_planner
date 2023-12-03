@@ -14,7 +14,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import MealPlannerForm, RecipeForm, RecipeIngredientFormset
 from .models import Ingredient, Recipe, RecipeIngredient
-from .utils import MealPlanner
+from .utils import MealPlanner, IngredientList
 from django.db import transaction
 
 
@@ -34,7 +34,10 @@ def run_meal_planner(request):
             if user_can_meal_plan(user):
 
                 meal_plan = meal_planner.execute()
-                context.update({"meal_plan": meal_plan})
+                ingredient_list = IngredientList(meal_plans=meal_plan).execute()
+                context.update({"meal_plan": meal_plan,
+                                "ingredient_list": dict(sorted(ingredient_list.items())),
+                                })
                 messages.success(
                     request,
                     f"{user.username}'s meal plan has been created for {days_to_plan} days of {daily_calorie_limit} calories!",

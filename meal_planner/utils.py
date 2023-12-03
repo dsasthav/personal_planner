@@ -1,7 +1,7 @@
 from .models import Recipe
 from django.contrib.auth.models import User
 import random
-
+from math import floor
 
 class MealPlan:
     """
@@ -71,7 +71,7 @@ class MealPlanner:
             meal_plan.set_meal(breakfast, "breakfast")
 
             # if breakfast recipe has more than 1 serving, queue the meal for the next day
-            if breakfast_servings > 1:
+            if floor(breakfast_servings) > 1:
                 self.queue["breakfast"].append((breakfast, breakfast_servings-1))
 
             # randomly pick a lunch
@@ -85,7 +85,7 @@ class MealPlanner:
             meal_plan.set_meal(lunch, "lunch")
 
             # if lunch recipe has more than 1 serving, queue the meal for the next day
-            if lunch_servings > 1:
+            if floor(lunch_servings) > 1:
                 self.queue["lunch"].append((lunch, lunch_servings-1))   
 
             # randomly pick a dinner
@@ -99,7 +99,7 @@ class MealPlanner:
             meal_plan.set_meal(dinner, "dinner")
 
             # if dinner recipe has more than 1 serving, queue the meal for the next day
-            if dinner_servings > 1:
+            if floor(dinner_servings) > 1:
                 self.queue["dinner"].append((dinner, dinner_servings-1))
 
             # calculate total calories for day
@@ -113,5 +113,33 @@ class MealPlanner:
             meal_plans.append(meal_plan)
 
         return meal_plans
+    
+
+class IngredientList:
+
+    def __init__(self, meal_plans):
+        self.meal_plans = meal_plans
+        self.ingredient_list = {}
+
+    def execute(self):
+        """
+        Algorithm:
+            For each meal plan, get the ingredients
+            For each ingredient, add the quantity to the total
+        """
+        for meal_plan in self.meal_plans:
+            for meal_type in ["breakfast", "lunch", "dinner", "snack"]:
+                recipe = getattr(meal_plan, meal_type)
+                if recipe:
+                    for r_ingredient in recipe.recipeingredient_set.all():
+                        if r_ingredient.ingredient.name not in self.ingredient_list:
+                            self.ingredient_list[r_ingredient.ingredient.name] = {
+                                "quantity": r_ingredient.quantity or 0,
+                                "unit": r_ingredient.unit,
+                            }
+                        else:
+                            self.ingredient_list[r_ingredient.ingredient.name]["quantity"] += (r_ingredient.quantity or 0)
+        return self.ingredient_list
+
 
     

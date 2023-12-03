@@ -10,8 +10,8 @@ DEFAULT_DAYS_TO_PLAN = 5
 DEFAULT_DAILY_CALORIE_LIMIT = 2000
 
 class MealPlannerForm(forms.Form):
-    days_to_plan = forms.IntegerField(initial=DEFAULT_DAYS_TO_PLAN)
-    daily_calorie_limit = forms.IntegerField(initial=DEFAULT_DAILY_CALORIE_LIMIT)
+    days_to_plan = forms.IntegerField(initial=DEFAULT_DAYS_TO_PLAN, max_value=7, min_value=1)
+    daily_calorie_limit = forms.IntegerField(initial=DEFAULT_DAILY_CALORIE_LIMIT, min_value=1000, max_value=5000)
 
 
 class RecipeForm(forms.ModelForm):

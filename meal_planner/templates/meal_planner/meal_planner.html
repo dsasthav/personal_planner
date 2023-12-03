@@ -1,73 +1,95 @@
 {% extends "meal_planner/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Meal Planner</legend>
-                {{ form|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Submit</button>
-            </div>
-        </form>
-    </div>
-    {% if meal_plan %}
-    <div class="content-section">
-        <table class="table">
-            <th>Day</th>
-            <th>Breakfast</th>
-            <th>Lunch</th>
-            <th>Dinner</th>
-            <th>Snack</th>
-            <th>Total</th>
-            {% for day in meal_plan %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>
-                        <div>
-                            <a href="{% url 'recipe-detail' day.breakfast.id %}">{{ day.breakfast.name }}</a>
-                            <p class="my-0 text-muted">{{ day.breakfast.calories }} cal</p>
-                            <p class="my-0 text-muted">{{ day.breakfast.protein }}g protein</p>
-                            <p class="my-0 text-muted">{{ day.breakfast.servings }}servings</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <a href="{% url 'recipe-detail' day.lunch.id %}">{{ day.lunch.name }}</a>
-                            <p class="my-0 text-muted">{{ day.lunch.calories }} calories</p>
-                            <p class="my-0 text-muted">{{ day.lunch.protein }}g protein</p>
-                            <p class="my-0 text-muted">{{ day.lunch.servings }} servings</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <a href="{% url 'recipe-detail' day.dinner.id %}">{{ day.dinner.name }}</a>
-                            <p class="my-0 text-muted">{{ day.dinner.calories }} calories</p>
-                            <p class="my-0 text-muted">{{ day.dinner.protein }}g protein</p>
-                            <p class="my-0 text-muted">{{ day.dinner.servings }} servings</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            {% if day.snack %}
-                            <a href="{% url 'recipe-detail' day.snack.id %}">{{ day.snack.name }}</a>
-                            <p class="my-0 text-muted">{{ day.snack.calories }} calories</p>
-                            <p class="my-0 text-muted">{{ day.snack.protein }}g protein</p>
-                            <p class="my-0 text-muted">{{ day.snack.servings }} servings</p>
-                            {% endif %}
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <p class="my-0 text-muted">{{ day.total_calories }} calories</p>
-                            <p class="my-0 text-muted">{{ day.total_protein }}g protein</p>
-                        </div>
-                    </td>
-                </tr>
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Meal Planner</legend>
+            {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% if meal_plan %}
+<div class="content-section">
+    <h3>Meal Plan</h3>
+    <table class="table col-md-4">
+        <th>Day</th>
+        <th>Breakfast</th>
+        <th>Lunch</th>
+        <th>Dinner</th>
+        <th>Snack</th>
+        <th>Total</th>
+        {% for day in meal_plan %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <div>
+                    <a href="{% url 'recipe-detail' day.breakfast.id %}">{{ day.breakfast.name }}</a>
+                    <p class="my-0 text-muted">{{ day.breakfast.calories }} cal</p>
+                    <p class="my-0 text-muted">{{ day.breakfast.protein }}g protein</p>
+                    <p class="my-0 text-muted">{{ day.breakfast.servings }}servings</p>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <a href="{% url 'recipe-detail' day.lunch.id %}">{{ day.lunch.name }}</a>
+                    <p class="my-0 text-muted">{{ day.lunch.calories }} calories</p>
+                    <p class="my-0 text-muted">{{ day.lunch.protein }}g protein</p>
+                    <p class="my-0 text-muted">{{ day.lunch.servings }} servings</p>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <a href="{% url 'recipe-detail' day.dinner.id %}">{{ day.dinner.name }}</a>
+                    <p class="my-0 text-muted">{{ day.dinner.calories }} calories</p>
+                    <p class="my-0 text-muted">{{ day.dinner.protein }}g protein</p>
+                    <p class="my-0 text-muted">{{ day.dinner.servings }} servings</p>
+                </div>
+            </td>
+            <td>
+                <div>
+                    {% if day.snack %}
+                    <a href="{% url 'recipe-detail' day.snack.id %}">{{ day.snack.name }}</a>
+                    <p class="my-0 text-muted">{{ day.snack.calories }} calories</p>
+                    <p class="my-0 text-muted">{{ day.snack.protein }}g protein</p>
+                    <p class="my-0 text-muted">{{ day.snack.servings }} servings</p>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                <div>
+                    <p class="my-0 text-muted">{{ day.total_calories }} calories</p>
+                    <p class="my-0 text-muted">{{ day.total_protein }}g protein</p>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+    
+    <div>
+
+        <h3>Ingredient List</h3>
+        <table class="table col-md-4">
+            <th>
+            <td>Quantity</td>
+            <td>Unit</td>
+            <td>Ingredient</td>
+            </th>
+            {% for ingredient, dict in ingredient_list.items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ dict.quantity }}</td>
+                <td>{{ dict.unit }}</td>
+                <td>{{ ingredient }}</td>
+            </tr>
             {% endfor %}
         </table>
     </div>
-    {% endif %}
+</div>
+{% endif %}
 {% endblock content %}
