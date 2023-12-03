@@ -80,13 +80,25 @@ class IngredientCreateView(LoginRequiredMixin, CreateView):
     fields = ["name"]
 
 
-class IngredientUpdateView(LoginRequiredMixin, UpdateView):
+class IngredientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ingredient
     fields = ["name"]
 
+    def test_func(self):
+        recipe = self.get_object()
+        if self.request.user == recipe.user:
+            return True
+        return False
 
-class IngredientDeleteView(LoginRequiredMixin, DeleteView):
+
+class IngredientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ingredient
+
+    def test_func(self):
+        recipe = self.get_object()
+        if self.request.user == recipe.user:
+            return True
+        return False
 
     def get_success_url(self) -> str:
         return reverse_lazy("ingredient-list")
