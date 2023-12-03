@@ -12,14 +12,16 @@
         <p class="h4">Ingredients:</p>
         <table class="table">
             <th>
-                <td>Ingredient</td>
-                <td>Quantity</td>
-                <td>Unit</td>
+            <td>Ingredient</td>
+            <td>Quantity</td>
+            <td>Unit</td>
             </th>
             {% for ingredient in recipe.recipeingredient_set.all %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ ingredient.ingredient.name }}</td>
+                <td>
+                    <a href="{% url 'ingredient-detail' ingredient.ingredient.id %}">{{ ingredient.ingredient.name }}</a>
+                </td>
                 <td>{{ ingredient.quantity|floatformat:"2" }}</td>
                 <td>{{ ingredient.unit }}</td>
             </tr>
